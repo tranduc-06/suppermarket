@@ -12,7 +12,7 @@
                             @csrf
 
                             <div class="row mb-3">
-                                <label for="name" class="col-md-4 col-form-label text-md-end">{{ __('Họ tên') }}</label>
+                                <label for="name" class="col-md-4 col-form-label text-md-end">{{ __('Họ tên') }} <span class="require">*</span></label>
 
                                 <div class="col-md-6">
                                     <input id="name" type="text" class="form-control @error('name') is-invalid @enderror"
@@ -26,8 +26,9 @@
                                 </div>
                             </div>
 
+
                             <div class="row mb-3">
-                                <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('Email') }}</label>
+                                <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('Email') }} <span class="require">*</span></label>
 
                                 <div class="col-md-6">
                                     <input id="email" type="email" class="form-control @error('email') is-invalid @enderror"
@@ -40,10 +41,24 @@
                                     @enderror
                                 </div>
                             </div>
+                            <div class="row mb-3">
+                                <label for="phone" class="col-md-4 col-form-label text-md-end">{{ __('Phone') }} <span class="require">*</span></label>
+
+                                <div class="col-md-6">
+                                    <input id="phone" type="text" class="form-control @error('phone') is-invalid @enderror"
+                                        name="phone" value="{{ old('email') }}" required>
+
+                                    @error('phone')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                            </div>
 
                             <div class="row mb-3">
                                 <label for="password"
-                                    class="col-md-4 col-form-label text-md-end">{{ __('Mật khẩu') }}</label>
+                                    class="col-md-4 col-form-label text-md-end">{{ __('Mật khẩu') }} <span class="require">*</span></label>
 
                                 <div class="col-md-6">
                                     <input id="password" type="password"
@@ -60,7 +75,7 @@
 
                             <div class="row mb-3">
                                 <label for="password-confirm"
-                                    class="col-md-4 col-form-label text-md-end">{{ __('Xác nhân mật khẩu') }}</label>
+                                    class="col-md-4 col-form-label text-md-end">{{ __('Xác nhân mật khẩu') }} <span class="require">*</span></label>
 
                                 <div class="col-md-6">
                                     <input id="password-confirm" type="password" class="form-control"
@@ -70,7 +85,7 @@
 
                             <div class="row mb-3">
                                 <label for="name"
-                                    class="col-md-4 col-form-label text-md-end">{{ __('Tỉnh/Thành Phố') }}</label>
+                                    class="col-md-4 col-form-label text-md-end">{{ __('Tỉnh/Thành Phố') }} <span class="require">*</span></label>
 
                                 <div class="col-md-6">
                                     <select name="city" id="city" class="form-control @error('city') is-invalid @enderror">
@@ -89,7 +104,7 @@
                             </div>
                             <div class="row mb-3">
                                 <label for="district"
-                                    class="col-md-4 col-form-label text-md-end">{{ __('Quận/Huyện') }}</label>
+                                    class="col-md-4 col-form-label text-md-end">{{ __('Quận/Huyện') }} <span class="require">*</span></label>
 
                                 <div class="col-md-6">
                                     <select name="district" id="district"
@@ -105,7 +120,7 @@
                             </div>
                             <div class="row mb-3">
                                 <label for="village"
-                                    class="col-md-4 col-form-label text-md-end">{{ __('Xã/Phường') }}</label>
+                                    class="col-md-4 col-form-label text-md-end">{{ __('Xã/Phường') }} <span class="require">*</span></label>
 
                                 <div class="col-md-6">
                                     <select name="village" id="village"
@@ -123,7 +138,7 @@
 
                             <div class="row mb-3">
                                 <label for="address"
-                                    class="col-md-4 col-form-label text-md-end">{{ __('Địa chỉ') }}</label>
+                                    class="col-md-4 col-form-label text-md-end">{{ __('Địa chỉ') }} <span class="require">*</span></label>
 
                                 <div class="col-md-6">
                                     <input id="address" type="text"
@@ -162,9 +177,9 @@
         });
         $(document).ready(function() {
             $('#city').on('change', function(e) {
-                
 
-                $('#village').empty();
+
+                // $('#district').empty();
 
                 var city_id = e.target.value;
                 $.ajax({
@@ -194,7 +209,6 @@
                         district_id: district_id
                     },
                     success: function(data) {
-                        console.log('aaaa');
                         $('#village').empty();
                         $.each(data.villages, function(index,
                             village) {
