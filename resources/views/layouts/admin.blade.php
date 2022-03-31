@@ -15,6 +15,8 @@
     <link href="{{ asset('admin/css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('admin/font-awesome/css/font-awesome.css') }}" rel="stylesheet">
     {{-- <link href="{{ asset('css/plugins/footable/footable.core.css') }}" rel="stylesheet"> --}}
+    <link href="{{asset('css/plugins/dataTables/datatables.min.css')}}" rel="stylesheet">
+
     <link href="{{ asset('admin/css/animate.css') }}" rel="stylesheet">
     <link href="{{ asset('admin/css/style.css') }}" rel="stylesheet">
     <link rel="stylesheet"
@@ -44,7 +46,7 @@
                         </div>
                     </li>
                     <li>
-                        <a href="#"><i class="fa fa-user"></i> <span class="nav-label">Quản lý sản
+                        <a href="{{route('product-management.index')}}"><i class="fa fa-user"></i> <span class="nav-label">Quản lý sản
                                 phẩm</span></a>
                     </li>
 
