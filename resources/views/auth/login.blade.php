@@ -64,6 +64,13 @@
                                 @endif
                             </div>
                         </div>
+
+                        <div class="form-group gg" style="text-align: center;background-color:#eb8f34;">
+                            <a href="{{ url('auth/google') }}">
+                                <span style="color: aliceblue"><i class="fa fa-google" aria-hidden="true"></i>
+                                    Sign in with Google</span>
+                                </a>
+                        </div>
                     </form>
                 </div>
             </div>

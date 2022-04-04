@@ -3,6 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Categories\StoreCategoryRequest;
+use App\Http\Requests\Products\StoreProductRequest;
+use App\Models\Category;
+use Exception;
 use Illuminate\Http\Request;
 
 class CategoryManagementController extends Controller
@@ -12,9 +16,17 @@ class CategoryManagementController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $categories = Category::orderBy('id','DESC');
+        $keyword = $request->keyword;
+        if($keyword) {
+            $categories = $categories->where('name', 'LIKE', '%' . $keyword . '%');
+        }
+
+        $categories = $categories->paginate(2);
+
+        return view('admin.categories.index',compact('categories','keyword'));
     }
 
     /**
@@ -33,9 +45,18 @@ class CategoryManagementController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreCategoryRequest $request)
     {
-        //
+        try {
+            $data = $request->all();
+            $category = new Category;
+            $category->fill($data)->save();
+
+            return redirect()->back()->with('success','Create category successfully');
+        } catch (Exception $e) {
+            return redirect()->back()->with('error',$e->getMessage());
+        }
+       
     }
 
     /**
@@ -57,7 +78,9 @@ class CategoryManagementController extends Controller
      */
     public function edit($id)
     {
-        //
+        $category = Category::find($id);
+
+        return view('admin.categories.edit',compact('category'));
     }
 
     /**
@@ -67,10 +90,20 @@ class CategoryManagementController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(StoreCategoryRequest $request, $id)
     {
-        //
+        try {
+            $data = $request->all();
+            $category = Category::find($id);
+            $category->fill($data)->save();
+
+            return redirect()->route('category-management.index')->with('success','Update category successfully');
+        } catch (Exception $e) {
+
+            return redirect()->back()->with('error',$e->getMessage());
+        }
     }
+      
 
     /**
      * Remove the specified resource from storage.

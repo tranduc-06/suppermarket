@@ -7,15 +7,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}" />
 
-    <title>Ecenter</title>
+    <title>OGANI</title>
 
     {{-- <link rel="stylesheet" href="{{asset('https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css')}}" /> --}}
     <link rel="stylesheet"
         href="{{ asset('https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css') }}" />
     <link href="{{ asset('admin/css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('admin/font-awesome/css/font-awesome.css') }}" rel="stylesheet">
-    {{-- <link href="{{ asset('css/plugins/footable/footable.core.css') }}" rel="stylesheet"> --}}
-    <link href="{{asset('css/plugins/dataTables/datatables.min.css')}}" rel="stylesheet">
+    <link href="{{ asset('admin/css/plugins/footable/footable.core.css') }}" rel="stylesheet">
+    <link href="{{asset('admin/css/plugins/dataTables/datatables.min.css')}}" rel="stylesheet">
 
     <link href="{{ asset('admin/css/animate.css') }}" rel="stylesheet">
     <link href="{{ asset('admin/css/style.css') }}" rel="stylesheet">
@@ -45,8 +45,13 @@
                             EC+
                         </div>
                     </li>
-                    <li>
-                        <a href="{{route('product-management.index')}}"><i class="fa fa-user"></i> <span class="nav-label">Quản lý sản
+                    <li class="{{ 'category-management' == request()->path() ? 'active' : '' }}">
+                        <a href="{{route('category-management.index')}}"><i class="fa fa-list-alt" aria-hidden="true"></i>
+                            <span class="nav-label">Danh mục sản
+                                phẩm</span></a>
+                    </li>
+                    <li class="{{ 'product-management' == request()->path() ? 'active' : '' }}">
+                        <a href="{{route('product-management.index')}}"><i class="fa fa-user"></i> <span class="nav-label">Sản
                                 phẩm</span></a>
                     </li>
 
@@ -90,6 +95,8 @@
     <!-- Custom and plugin admin/javascript -->
     <script src="{{ asset('admin/js/inspinia.js') }}"></script>
     <script src="{{ asset('admin/js/plugins/pace/pace.min.js') }}"></script>
+    <script src="{{asset('admin/js/plugins/footable/footable.all.min.js')}}"></script>
+
 
     <script src="{{ asset('admin/js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
     <script src="{{ asset('admin/js/app.js') }}"></script>
@@ -111,6 +118,15 @@
 
 
     @yield('script')
+
+    <script>
+
+        $(document).ready(function() {
+
+            $('.footable').footable();
+        });
+    </script>
+    
 </body>
 
 </html>

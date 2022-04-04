@@ -1,12 +1,12 @@
 <?php
 
+use App\Http\Controllers\Admin\CategoryManagementController;
 use App\Http\Controllers\Admin\ProductManagementController;
 use App\Http\Controllers\GetLocalController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\HomeController;
-use League\Flysystem\Plugin\GetWithMetadata;
-
+use App\Http\Controllers\LoginGoogleController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -18,17 +18,19 @@ use League\Flysystem\Plugin\GetWithMetadata;
 |
 */
 
-
+ Route::get('/', function () {
+        return view('welcome');
+    })->name('welcome');
 
 Auth::routes();
 Route::middleware('auth')->group(function () {
     Route::get('/home', [HomeController::class, 'index'])->name('home')->middleware('checklogin');
     Route::resource('/product-management', ProductManagementController::class);
-
-    Route::get('/', function () {
-        return view('welcome');
-    });
+    Route::resource('/category-management', CategoryManagementController::class);
 });
 
 Route::post('district', [GetLocalController::class, 'district'])->name('district');
 Route::post('village', [GetLocalController::class, 'village'])->name('village');
+
+Route::get('auth/google', [LoginGoogleController::class, 'redirectToGoogle']);
+Route::get('auth/google/callback', [LoginGoogleController::class, 'handleGoogleCallback']);

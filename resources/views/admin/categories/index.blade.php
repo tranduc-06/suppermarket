@@ -19,13 +19,13 @@
 
         <div class="row wrapper border-bottom white-bg page-heading">
             <div class="col-lg-11">
-                <h2> <a href="{{ route('product-management.index') }}">List products</a> </h2>
+                <h2> <a href="{{ route('category-management.index') }}">List Categories</a> </h2>
                 <ol class="breadcrumb">
                     <li>
                         <a href="{{ route('home') }}">Home</a>
                     </li>
                     <li class="active">
-                        <strong>List products</strong>
+                        <strong>List Categories</strong>
                     </li>
                 </ol>
             </div>
@@ -43,24 +43,23 @@
                     <div class="ibox float-e-margins">
                         <div class="ibox-title">
                             <div class="input-group" style="display:flex">
-                                <form action="{{ route('product-management.index') }}" method="get">
+                                <form action="{{ route('category-management.index') }}" method="get">
                                     @csrf
-                                    <div class="col-lg-5">
+                                    <div class="col-lg-6">
                                         <div class="form-outline">
                                             <input type="search" id="keyword" name="keyword"
-                                                value="{{ old('keyword', $keyword) }}" class="form-control"
-                                                placeholder="Search anything ..." />
+                                                    value="{{ old('keyword', $keyword) }}" class="form-control" placeholder="Search anything ..." />
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
-                                        <select name="category_search" id="category_search" class="form-control">
-                                            <option value="">Select Category</option>
-                                        </select>
+                                        {{-- <select name="subject_search" id="subject_search" class="form-control">
+                                            <option value="">Select subject</option>
+                                        </select> --}}
                                     </div>
 
                                     <div class="col-lg-1">
                                         <button type="submit" class="btn btn-primary-sm">
-                                            Filter
+                                            Search
                                         </button>
                                     </div>
                                 </form>
@@ -74,41 +73,31 @@
                                 <table class="footable table sortable table-stripped toggle-arrow-tiny">
                                     <thead>
                                         <tr>
-                                            <th data-sort-ignore="true">Id</th>
+                                            <th>Id</th>
                                             <th>Name</th>
-                                            <th data-sort-ignore="true">Category</th>
-                                            <th data-sort-ignore="true">Code</th>
-                                            <th data-sort-ignore="true">Quantity_Instock</th>
-                                            <th data-sort-ignore="true">Price</th>
-                                            <th data-sort-ignore="true">Image</th>
+                                            <th data-sort-ignore="true">Description</th>
                                             <th data-sort-ignore="true"></th>
                                         </tr>
                                     </thead>
                                     <tbody>
 
-                                        @foreach ($products as $key => $value)
+                                        @foreach ($categories as $key => $value)
                                             <tr class="gradeX">
                                                 <td>{{ $value->id }}</td>
                                                 <td>{{ $value->name }}</td>
-                                                <td>{{ $value->categories->name }}</td>
-                                                <td>{{ $value->code }}</td>
-                                                <td>{{ $value->quantity_instock }}</td>
-                                                <td>{{ $value->price }}</td>
-                                                <td class="center"><img src="{{ $value->image }}" alt="error"
-                                                        width="100" height="100"></td>
-
+                                                <td>{{ $value->description }}</td>
                                                 <td>
                                                     <div style="display:flex;">
-                                                        <a href="{{ route('product-management.edit', [$value->id]) }}"
+                                                        <a href="{{ route('category-management.edit', [$value->id]) }}"
                                                             class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o"
                                                                 aria-hidden="true"></i></a>
                                                         <form
-                                                            action="{{ route('product-management.destroy', [$value->id]) }}"
+                                                            action="{{ route('category-management.destroy', [$value->id]) }}"
                                                             method="post">
                                                             @method('DELETE')
                                                             @csrf
                                                             <button style="margin-left: 5px;"
-                                                                onclick="return confirm('Do you want delete this product?')"
+                                                                onclick="return confirm('Do you want delete this teacher?')"
                                                                 class="btn btn-danger btn-sm"><i class="fa fa-trash"
                                                                     aria-hidden="true"></i></button>
 
@@ -120,7 +109,7 @@
                                     </tbody>
                                     <tfoot>
                                         <tr>
-                                            {{-- <a class="btn btn-success btn-sm" href="{{ route('product.fileexport') }}">Export
+                                            {{-- <a class="btn btn-success btn-sm" href="{{ route('teacher.fileexport') }}">Export
                                                 data</a> --}}
                                             <a class="btn btn-success btn-sm" href="#">Export
                                                 data</a>
@@ -128,7 +117,8 @@
                                     </tfoot>
                                 </table>
                                 <div class="pull-right">
-                                    {{ $products->appends(['keyword' => $keyword])->links('vendor.pagination.custom') }}
+                                    {{ $categories->appends(['keyword' => $keyword])->links('vendor.pagination.custom') }}
+
                                 </div>
                             </div>
                         </div>
@@ -153,7 +143,7 @@
                 <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h3 class="modal-title">{{ __('Create New Product') }}
+                            <h3 class="modal-title">{{ __('Create New Category') }}
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
@@ -174,7 +164,7 @@
 
                                         <div class="ibox-content">
                                             <form method="POST" class="form-horizontal"
-                                                action="{{ route('product-management.store') }}"
+                                                action="{{ route('category-management.store') }}"
                                                 enctype="multipart/form-data">
 
                                                 @csrf
@@ -193,41 +183,13 @@
                                                     </div>
                                                 </div>
 
-                                                <div class="form-group">
-                                                    <label class="col-sm-12 control-label">Category</label>
-                                                    <div class="col-sm-12">
-                                                        <select class="form-control m-b" name="category_id"
-                                                            id="category_id">
-                                                            @foreach ($categories as $categories)
-                                                                <option value="{{ $categories->id }}">
-                                                                    {{ $categories->name }} </option>
-                                                            @endforeach
-
-                                                        </select>
-                                                    </div>
-                                                </div>
-
-
-                                                <div class="form-group"><label class="col-sm-12 control-label">Code
-                                                        <span class="require">*</span></label>
-
-                                                    <div class="col-sm-12">
-                                                        <input type="text" name="code" value="{{ old('code') }}"
-                                                            class="form-control m-b @error('code') is-invalid @enderror">
-                                                        @error('code')
-                                                            <span class="alert-danger" role="alert">
-                                                                <strong>{{ $message }}</strong>
-                                                            </span>
-                                                        @enderror
-                                                    </div>
-
-                                                </div>
 
                                                 <div class="form-group"><label
                                                         class="col-sm-12 control-label">Description
                                                         <span class="require">*</span></label>
 
-                                                    <div class="col-sm-12"><input type="text" name="description"
+                                                    <div class="col-sm-12">
+                                                        <input type="text" name="description"
                                                             value="{{ old('description') }}"
                                                             class="form-control m-b @error('description') is-invalid @enderror">
                                                         @error('description')
@@ -238,52 +200,15 @@
                                                     </div>
                                                 </div>
 
-                                                <div class="form-group"><label
-                                                        class="col-sm-12 control-label">Quantity_instock
-                                                        <span class="require">*</span></label>
-
-                                                    <div class="col-sm-12"><input type="number" name="quantity_instock" id="quantity_instock"
-                                                            value="{{ old('quantity_instock') }}"
-                                                            class="form-control m-b @error('quantity_instock') is-invalid @enderror">
-                                                        @error('quantity_instock')
-                                                            <span class="alert-danger" role="alert">
-                                                                <strong>{{ $message }}</strong>
-                                                            </span>
-                                                        @enderror
-                                                    </div>
-                                                </div>
-
-                                                <div class="form-group"><label class="col-sm-12 control-label">Price
-                                                        <span class="require">*</span></label>
-
-                                                    <div class="col-sm-12"><input type="text" name="price"
-                                                            value="{{ old('price') }}"
-                                                            class="form-control m-b @error('price') is-invalid @enderror">
-                                                        @error('price')
-                                                            <span class="alert-danger" role="alert">
-                                                                <strong>{{ $message }}</strong>
-                                                            </span>
-                                                        @enderror
-                                                    </div>
-                                                </div>
-
-                                                <div class="form-group"><label class="col-sm-12 control-label">Image
-                                                        <span class="require">*</span></label>
-
-                                                    <div class="col-sm-12"><input type="file" name="image"
-                                                            class="form-control m-b @error('image') is-invalid @enderror">
-                                                        @error('image')
-                                                            <span class="alert-danger" role="alert">
-                                                                <strong>{{ $message }}</strong>
-                                                            </span>
-                                                        @enderror
-                                                    </div>
-                                                </div>
                                                 <div class="form-group">
                                                     <div class="col-sm-4 col-sm-offset-10">
                                                         <button class="btn btn-primary btn-sm" type="submit">Save</button>
-                                                        <a href="{{ route('product-management.index') }}"
+                                                        <a href="{{ route('category-management.index') }}"
                                                             class="btn btn-success btn-sm">Back</a>
+
+                                                            {{-- <button class="btn btn-success btn-sm close" data-dismiss="modal">
+                                                                Close
+                                                            </button> --}}
                                                     </div>
                                                 </div>
                                             </form>

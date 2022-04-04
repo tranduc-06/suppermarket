@@ -3,7 +3,13 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Products\StoreProductRequest;
+use App\Models\Category;
+use App\Models\Product;
+use Exception;
 use Illuminate\Http\Request;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
+
 
 class ProductManagementController extends Controller
 {
@@ -12,9 +18,21 @@ class ProductManagementController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return view('admin.products.index');
+        $products = Product::with('categories')->orderBy('id','DESC');
+
+        $categories = Category::all();
+        $keyword = $request->keyword;
+
+        if($keyword) {
+            $products = $products->where('name', 'LIKE', '%' . $keyword . '%');
+        }
+
+        $products = $products->paginate(10);
+        
+        
+        return view('admin.products.index',compact('products','categories','keyword'));
     }
 
     /**
@@ -33,9 +51,23 @@ class ProductManagementController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreProductRequest $request)
     {
-        //
+        // dd($request);
+        try {
+            $data = $request->all();
+            
+            $product = new Product;
+            $image = cloudinary()->upload($request->file('image')->getRealPath())->getSecurePath();
+            $data['image'] = $image;
+            
+            $product->fill($data)->save();
+            return redirect()->back()->with('success','You are create new product');
+        } catch (Exception $e) {
+
+            return redirect()->back()->with('error',$e->getMessage());
+        }
+            
     }
 
     /**
@@ -57,7 +89,9 @@ class ProductManagementController extends Controller
      */
     public function edit($id)
     {
-        //
+        $product = Product::find($id);
+        $categories = Category::all();
+        return view('admin.products.edit',compact('product','categories'));
     }
 
     /**
@@ -80,6 +114,8 @@ class ProductManagementController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Product::find($id)->delete();
+
+        return redirect()->back()->with('errors ','Delete teacher successfully');
     }
 }

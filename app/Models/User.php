@@ -26,6 +26,7 @@ class User extends Authenticatable
         'district',
         'village',
         'address',
+        'google_id'
     ];
 
     /**
